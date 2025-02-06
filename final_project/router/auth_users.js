@@ -50,7 +50,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
 const isbn = req.params.isbn;
 const book = books[isbn];
-
 if (!book) {
   return res.status(404).json({ message: "Book not found" });
 }
@@ -66,9 +65,6 @@ if (book.reviews[user]) {
 }
 
 book.reviews[user] = review;
-console.log(`Reseña agregada correctamente para el libro con ISBN ${isbn}:`, book.reviews);
-
-// Responder con el libro actualizado
 return res.status(200).json({ message: "Review added successfully", book });
 });
 
