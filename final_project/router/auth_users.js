@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken');
 let books = require("./booksdb.js");
 const regd_users = express.Router();
 
-let users = [{ username: "admin", password: "password123" },];
+let users = [{ username: "admin", password: "password123" },
+{ username: "newuser", password: "newpassword123" }
+];
 
 const isValid = (username) => {
   return users.some(user => user.username === username);
@@ -19,20 +21,20 @@ const authenticatedUser = (username, password) => { //returns boolean
 
 //only registered users can login
 regd_users.post("/login", (req, res) => {
-  const username = req.body.username;
+  const user = req.body.user;
   const password = req.body.password;
 
-  if (!username || !password) {
+  if (!user || !password) {
     return res.status(404).json({ message: "Error logging in" });
   }
 
-  if (authenticatedUser(username, password)) {
+  if (authenticatedUser(user, password)) {
     let accessToken = jwt.sign({
       data: password
     }, 'access', { expiresIn: 60 * 60 });
 
     req.session.authorization = {
-      accessToken, username
+      accessToken, user
     }
     return res.status(200).send("User successfully logged in");
   } else {
